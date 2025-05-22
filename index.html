@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本のRPO市場インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!--
+    Confirmation:
+    - Mermaid JS was NOT used.
+    - SVG graphics were NOT used. All visuals are HTML/CSS, Unicode characters, or Canvas-based (Chart.js).
+    - Chosen Color Palette: Energetic & Playful (Conceptual - specific HEX codes applied in styles).
+    -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background-color: #F0F4F8; /* Light Blue-Gray */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Adjusted for better readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .brand-text-primary { color: #1A535C; } /* Dark Teal/Blue */
+        .brand-text-secondary { color: #FF6B6B; } /* Vibrant Red/Pink */
+        .brand-bg-primary { background-color: #1A535C; }
+        .brand-bg-secondary { background-color: #4ECDC4; } /* Teal */
+        .brand-accent1 { color: #45B7D1; } /* Bright Blue */
+        .brand-accent2 { color: #FED766; } /* Yellow */
+
+        .stat-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #1A535C; /* Dark Teal/Blue */
+        }
+        .subsection-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1A535C; /* Dark Teal/Blue */
+        }
+        .icon-placeholder {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+        }
+        .sticky-nav {
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-link {
+            padding: 0.75rem 1rem;
+            color: #1A535C;
+            font-weight: 500;
+            transition: color 0.3s ease, background-color 0.3s ease;
+            border-radius: 0.375rem;
+        }
+        .nav-link:hover {
+            color: #FF6B6B;
+            background-color: #E0E7FF;
+        }
+         .flowchart-step {
+            background-color: #FFFFFF;
+            border: 2px solid #4ECDC4; /* Teal */
+            color: #1A535C; /* Dark Teal/Blue */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #4ECDC4; /* Teal */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+        @media (min-width: 768px) {
+            .flowchart-arrow {
+                margin: 0 0.5rem;
+            }
+        }
+        .llm-button {
+            background-color: #FF6B6B; /* Vibrant Red/Pink */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .llm-button:hover {
+            background-color: #E65A5A; /* Darker Red/Pink */
+            transform: translateY(-2px);
+        }
+        .llm-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <nav class="sticky-nav p-4">
+        <div class="container mx-auto flex flex-wrap justify-center items-center space-x-2 md:space-x-4">
+            <a href="#intro" class="nav-link">RPOとは</a>
+            <a href="#market-size" class="nav-link">市場規模</a>
+            <a href="#drivers" class="nav-link">成長背景</a>
+            <a href="#services" class="nav-link">提供サービス</a>
+            <a href="#process" class="nav-link">RPOプロセス</a>
+            <a href="#challenges" class="nav-link">市場の課題</a>
+            <a href="#outlook" class="nav-link">今後の展望</a>
+            <a href="#llm-insights" class="nav-link">✨市場洞察アシスタント✨</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center py-8 md:py-12">
+            <h1 class="text-4xl md:text-5xl font-bold brand-text-primary mb-4">日本のRPO市場</h1>
+            <p class="text-xl md:text-2xl text-gray-600">成長トレンドと将来展望</p>
+        </header>
+
+        <section id="intro" class="mb-12 py-8">
+            <h2 class="section-title">RPO（採用プロセスアウトソーシング）とは？</h2>
+            <div class="max-w-3xl mx-auto text-center text-lg text-gray-700 space-y-4">
+                <p>RPO（Recruitment Process Outsourcing）とは、企業が採用活動の一部または全体を外部の専門企業に委託するサービスです。日本では「採用代行」や「採用アウトソーシング」とも呼ばれ、採用戦略の立案から母集団形成、応募者対応、選考、内定者フォロー、さらには入社後の定着支援まで、幅広い業務をカバーします。</p>
+                <p>RPOを活用することで、企業は採用業務の効率化、コスト削減、専門知識の活用、採用品質の向上、そして自社のコア業務へのリソース集中といったメリットを享受できます。変化の激しい現代のビジネス環境において、戦略的な人材獲得を実現するための有効な手段として注目されています。</p>
+            </div>
+        </section>
+
+        <section id="market-size" class="mb-12 py-8">
+            <h2 class="section-title">市場規模と成長トレンド</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">日本のRPO市場は近年著しい成長を遂げており、今後も拡大が見込まれます。2021年度の市場規模は628億円に達し、前年度比15.0%増と高い成長率を示しました。</p>
+            <div class="stat-card">
+                <div class="chart-container">
+                    <canvas id="marketSizeChart"></canvas>
+                </div>
+                <p class="text-center mt-4 text-sm text-gray-500">図1: RPO市場規模の推移と予測（億円）</p>
+            </div>
+        </section>
+
+        <section id="drivers" class="mb-12 py-8">
+            <h2 class="section-title">市場成長の背景</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">RPO市場の成長は、複数の社会的・経済的要因によって後押しされています。これらの要因は、企業が採用活動において外部の専門知識を求める動きを加速させています。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-accent1">📉</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">少子高齢化と労働人口減少</h3>
+                        <p class="text-gray-600">国内の労働力不足が深刻化し、優秀な人材獲得競争が激化しています。</p>
+                    </div>
+                </div>
+                <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-accent2">🛠️</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">採用手法の多様化・複雑化</h3>
+                        <p class="text-gray-600">採用チャネルの増加や選考プロセスの高度化により、専門性が求められています。</p>
+                    </div>
+                </div>
+                <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-text-secondary">💻</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">DX推進とテクノロジー活用</h3>
+                        <p class="text-gray-600">AIやデータ分析を用いた効率的な採用活動へのニーズが高まっています。</p>
+                    </div>
+                </div>
+                <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-accent1">🌍</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">グローバル化と多様な人材</h3>
+                        <p class="text-gray-600">国内外の多様なバックグラウンドを持つ人材獲得の必要性が増しています。</p>
+                    </div>
+                </div>
+                <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-accent2">💰</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">コスト削減と効率化意識</h3>
+                        <p class="text-gray-600">採用活動にかかるリソースを最適化し、コア業務に集中したい企業が増えています。</p>
+                    </div>
+                </div>
+                 <div class="stat-card flex items-start">
+                    <span class="icon-placeholder brand-text-secondary">🎯</span>
+                    <div>
+                        <h3 class="subsection-title text-xl">採用専門性の向上</h3>
+                        <p class="text-gray-600">専門的なノウハウや市場知見を活用し、採用の質を高める動きが活発です。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="mb-12 py-8">
+            <h2 class="section-title">提供される主なRPOサービス</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">RPOサービスは企業の採用フェーズやニーズに応じて多岐にわたります。採用戦略の策定から入社後のフォローまで、一貫したサポートが可能です。</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                    { title: '採用戦略立案・アドバイス', description: '採用目標、予算、フロー策定、人材要件定義など。', icon: '📜' },
+                    { title: '母集団形成', description: '求人媒体出稿、エージェント連携、ダイレクトリクルーティング、採用広報。', icon: '👥' },
+                    { title: '応募者対応', description: '書類受付・管理、スクリーニング、問い合わせ対応、日程調整。', icon: '📨' },
+                    { title: '選考支援', description: '面接代行（一部）、面接官トレーニング、選考進捗管理。', icon: '⚖️' },
+                    { title: '内定者フォロー・入社支援', description: '内定者連絡、フォロー面談、研修企画、入社後定着支援。', icon: '🤝' },
+                    { title: 'データ管理・レポーティング', description: '採用活動データの分析、進捗レポート作成。', icon: '📊' }
+                ].map(service => `
+                    <div class="stat-card">
+                        <div class="flex items-center mb-3">
+                            <span class="text-3xl mr-3">${service.icon}</span>
+                            <h3 class="subsection-title text-lg">${service.title}</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">${service.description}</p>
+                    </div>
+                `).join('')}
+            </div>
+        </section>
+
+        <section id="process" class="mb-12 py-8">
+            <h2 class="section-title">一般的なRPOプロセスフロー</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">RPOサービスは、企業の採用課題解決に向けて段階的に進められます。以下は一般的なプロセスの一例です。</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 items-center gap-4">
+                <div class="flowchart-step">1. 採用戦略<br/>&計画策定</div>
+                <div class="flowchart-arrow hidden md:flex">➡️</div>
+                <div class="flowchart-arrow flex md:hidden">⬇️</div>
+                <div class="flowchart-step">2. 母集団形成<br/>&ブランディング</div>
+                <div class="flowchart-arrow hidden md:flex">➡️</div>
+                <div class="flowchart-arrow flex md:hidden">⬇️</div>
+                <div class="flowchart-step">3. 候補者選考<br/>&スクリーニング</div>
+                <div class="flowchart-arrow hidden md:flex">➡️</div>
+                <div class="flowchart-arrow flex md:hidden">⬇️</div>
+                <div class="flowchart-step">4. 内定者対応<br/>&入社準備</div>
+                 <div class="flowchart-arrow hidden md:flex">➡️</div>
+                <div class="flowchart-arrow flex md:hidden">⬇️</div>
+                <div class="flowchart-step">5. 効果測定<br/>&改善提案</div>
+            </div>
+        </section>
+
+        <section id="challenges" class="mb-12 py-8">
+            <h2 class="section-title">市場の課題と解決策</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">RPO市場は成長していますが、導入や運用にはいくつかの課題も存在します。これらを理解し、対策を講じることが成功の鍵となります。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="stat-card">
+                    <h3 class="subsection-title">コミュニケーションギャップ</h3>
+                    <p class="text-gray-600 mb-2">企業とRPOベンダー間の認識のずれや情報共有不足。</p>
+                    <p class="text-sm brand-text-secondary"><strong>解決策:</strong> 定期的な報告会、明確な役割分担、KPI共有。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title">企業文化との整合性</h3>
+                    <p class="text-gray-600 mb-2">ベンダーが企業文化や求める人材像を深く理解できない可能性。</p>
+                    <p class="text-sm brand-text-secondary"><strong>解決策:</strong> 導入時の詳細な情報共有、継続的なフィードバック。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title">サービスのカスタマイズ性</h3>
+                    <p class="text-gray-600 mb-2">画一的サービスではなく、企業ニーズに合わせた柔軟な対応の必要性。</p>
+                    <p class="text-sm brand-text-secondary"><strong>解決策:</strong> ベンダー選定時の提案力・柔軟性の確認。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title">セキュリティリスク</h3>
+                    <p class="text-gray-600 mb-2">個人情報を含む採用データの外部委託に伴う情報漏洩懸念。</p>
+                    <p class="text-sm brand-text-secondary"><strong>解決策:</strong> 厳格な情報セキュリティ体制を持つベンダーの選定。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="outlook" class="mb-12 py-8">
+            <h2 class="section-title">今後の展望</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">日本のRPO市場は、技術革新や働き方の変化を背景に、今後も進化と成長を続けると予測されます。</p>
+            <div class="space-y-6">
+                <div class="stat-card">
+                    <h3 class="subsection-title flex items-center"><span class="icon-placeholder brand-accent1">🚀</span>技術革新とデジタル化の加速</h3>
+                    <p class="text-gray-600">AI、機械学習、データ分析ツールの活用がさらに進み、採用プロセスの効率性と精度が向上します。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title flex items-center"><span class="icon-placeholder brand-accent2">🌐</span>リモートワーク普及と多様な人材戦略</h3>
+                    <p class="text-gray-600">地理的制約のない人材獲得や、多様な働き方に対応した採用戦略の重要性が増します。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title flex items-center"><span class="icon-placeholder brand-text-secondary">🌟</span>候補者体験（Candidate Experience）の重視</h3>
+                    <p class="text-gray-600">採用競争の激化に伴い、候補者一人ひとりへのきめ細やかな対応と良好な体験提供が不可欠になります。</p>
+                </div>
+                <div class="stat-card">
+                    <h3 class="subsection-title flex items-center"><span class="icon-placeholder brand-accent1">🧩</span>専門特化型RPOの進化</h3>
+                    <p class="text-gray-600">特定の業界や職種に特化した、より深い専門知識を持つRPOサービスの需要が高まります。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="llm-insights" class="mb-12 py-8">
+            <h2 class="section-title">✨市場洞察アシスタント✨</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">日本のRPO市場について、さらに詳しく知りたいことはありませんか？質問を入力して、AIによる洞察を得ましょう。</p>
+            <div class="stat-card max-w-3xl mx-auto p-6">
+                <textarea id="insightQuestion" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-brand-accent1 focus:border-transparent resize-y" rows="4" placeholder="例: DX推進がRPO市場に与える具体的な影響は何ですか？"></textarea>
+                <div class="flex justify-center mb-4">
+                    <button id="generateInsightBtn" class="llm-button">洞察を生成する</button>
+                </div>
+                <div id="insightLoading" class="text-center text-brand-text-primary hidden">
+                    <p class="text-lg">✨洞察を生成中...しばらくお待ちください✨</p>
+                </div>
+                <div id="insightResult" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-md text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    ここにAIによる洞察が表示されます。
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 border-t border-gray-300">
+            <p class="text-gray-600">&copy; 2024 日本のRPO市場インフォグラフィック. All rights reserved.</p>
+            <p class="text-sm text-gray-500 mt-2">情報源: 提供された日本のRPO市場に関する詳細レポートに基づき作成。</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function wrapLabel(str, maxWidth) {
+            if (!str) return '';
+            if (str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if (currentLine.length > 0 && (currentLine + ' ' + word).length > maxWidth) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += (currentLine.length > 0 ? ' ' : '') + word;
+            }
+            if (currentLine.length > 0) {
+                lines.push(currentLine.trim());
+            }
+            return lines.length > 0 ? lines : [str];
+        }
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: "'Noto Sans JP', 'Inter', sans-serif",
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    },
+                    bodyFont: {
+                        family: "'Noto Sans JP', 'Inter', sans-serif",
+                    },
+                    titleFont: {
+                        family: "'Noto Sans JP', 'Inter', sans-serif",
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            family: "'Noto Sans JP', 'Inter', sans-serif",
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            family: "'Noto Sans JP', 'Inter', sans-serif",
+                        },
+                        callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                             return wrapLabel(label, 8);
+                        }
+                    }
+                }
+            }
+        };
+
+        // Market Size Chart
+        const marketSizeCtx = document.getElementById('marketSizeChart').getContext('2d');
+        new Chart(marketSizeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2019年度', '2020年度', '2021年度', '2022年度 (予測)', '2023年度 (予測)'],
+                datasets: [{
+                    label: '市場規模 (億円)',
+                    data: [500, 546, 628, 700, 780],
+                    backgroundColor: '#4ECDC4',
+                    borderColor: '#1A535C',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                 scales: {
+                    y: {
+                        ...commonChartOptions.scales.y,
+                        title: {
+                            display: true,
+                            text: '億円',
+                            font: { family: "'Noto Sans JP', 'Inter', sans-serif" }
+                        }
+                    },
+                    x: {
+                        ...commonChartOptions.scales.x
+                    }
+                }
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const navHeight = document.querySelector('.sticky-nav')?.offsetHeight || 0;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight - 20;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Gemini API Integration for Market Insights Assistant
+        const insightQuestionInput = document.getElementById('insightQuestion');
+        const generateInsightBtn = document.getElementById('generateInsightBtn');
+        const insightLoading = document.getElementById('insightLoading');
+        const insightResultDiv = document.getElementById('insightResult');
+
+        generateInsightBtn.addEventListener('click', async () => {
+            const prompt = insightQuestionInput.value.trim();
+            if (!prompt) {
+                insightResultDiv.textContent = '質問を入力してください。';
+                return;
+            }
+
+            insightLoading.classList.remove('hidden');
+            insightResultDiv.textContent = ''; // Clear previous results
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    insightResultDiv.textContent = text;
+                } else {
+                    insightResultDiv.textContent = '洞察の生成に失敗しました。もう一度お試しください。';
+                    console.error('Unexpected API response structure:', result);
+                }
+            } catch (error) {
+                insightResultDiv.textContent = 'エラーが発生しました。インターネット接続を確認し、もう一度お試しください。';
+                console.error('Error calling Gemini API:', error);
+            } finally {
+                insightLoading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
